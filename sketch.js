@@ -5,6 +5,7 @@ var nodes = [];
 var press = false;
 let index = 1;
 
+let buttonReload;
 let buttonReset;
 let buttonExport;
 let buttonSimulate;
@@ -27,16 +28,20 @@ function setup() {
     input = createFileInput(BttnHandleFile);
     input.position(10, 10);
 
+    buttonReload = createButton('Reload');
+    buttonReload.position(220, 10);
+    buttonReload.mousePressed(BttnReload);
+
     buttonReset = createButton('Reset');
     buttonReset.position(10, 40);
     buttonReset.mousePressed(BttnReset);
 
     buttonExport = createButton('Export');
-    buttonExport.position(100, 40);
+    buttonExport.position(110, 40);
     buttonExport.mousePressed(BttnExport);
 
     buttonOrganise = createButton('Organise');
-    buttonOrganise.position(190, 40);
+    buttonOrganise.position(210, 40);
     buttonOrganise.mousePressed(BttnOrganise);
 
     buttonSimulate = createButton('AutoPlace (EXPERIMENTAL)');
@@ -44,7 +49,7 @@ function setup() {
     buttonSimulate.mousePressed(BttnSimulation);
 
     buttonPop = createButton('Pop');
-    buttonPop.position(220, 70);
+    buttonPop.position(240, 70);
     buttonPop.mousePressed(BttnPop);
 }
 
@@ -160,6 +165,19 @@ function maker() {
 }
 
 // Buttons
+
+function BttnReload() {
+    nodes.forEach(node => {
+        node.inpTime.hide();
+        node.checkboxSP.hide();
+        node.inpConnections.hide();
+    });
+    nodes.splice(0, nodes.length);
+
+    clear();
+    maker();
+    display();
+}
 
 function BttnHandleFile(file) {
     nodes.forEach(node => {
