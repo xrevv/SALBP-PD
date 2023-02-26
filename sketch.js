@@ -214,6 +214,7 @@ function BttnExport() {
         output.push('Op ' + node.num + ' ' + node.time + ' ' + (node.sp == true ? '"preds"' : '"succs"') + ' [' + con + '],');
     });
     output[output.length - 1] = output[output.length - 1].slice(0, -1).trim();
+    saveStrings(output, 'output.txt');
 }
 
 function BttnOrganise() {
