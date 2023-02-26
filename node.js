@@ -170,7 +170,7 @@ class node {
     }
 
     checkBorder() {
-        if (this.pos.x <= 300) this.pos.x += this.r;
+        if (this.pos.x <= menuSize) this.pos.x += menuSize + this.r;
         if (this.pos.x >= window.innerWidth) this.pos.x -= this.r;
         if (this.pos.y <= 0) this.pos.y += this.r;
         if (this.pos.y >= window.innerHeight) this.pos.y -= this.r;

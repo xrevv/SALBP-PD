@@ -1,3 +1,5 @@
+const menuSize = 300;
+
 var data = [];
 var nodes = [];
 var press = false;
@@ -50,7 +52,7 @@ function draw() {
     clear();
 
     fill(50);
-    rect(0, 0, 300, height)
+    rect(0, 0, menuSize, height)
 
     nodes.forEach(node => {
         fill(0);
@@ -99,7 +101,7 @@ function mousePressed() {
         if (node.pressed(mouseX, mouseY))
             press = true;
     });
-    if (!press && mouseX > 250) {
+    if (!press && mouseX > menuSize) {
         console.log('New node')
         nodes.push(new node(index++, 3, false, false));
     }
