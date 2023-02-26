@@ -7,6 +7,7 @@ let buttonReset;
 let buttonExport;
 let buttonSimulate;
 let buttonOrganise;
+let buttonPop;
 
 function setup() {
 
@@ -37,8 +38,12 @@ function setup() {
     buttonOrganise.mousePressed(BttnOrganise);
 
     buttonSimulate = createButton('AutoPlace (EXPERIMENTAL)');
-    buttonSimulate.position(40, 70);
+    buttonSimulate.position(10, 70);
     buttonSimulate.mousePressed(BttnSimulation);
+
+    buttonPop = createButton('Pop');
+    buttonPop.position(220, 70);
+    buttonPop.mousePressed(BttnPop);
 }
 
 function draw() {
@@ -218,4 +223,12 @@ function BttnSimulation() {
         node.sim4();
     });
     // }
+}
+
+function BttnPop() {
+    nodes[nodes.length - 1].inpTime.hide();
+    nodes[nodes.length - 1].checkboxSP.hide();
+    nodes[nodes.length - 1].inpConnections.hide();
+    index--;
+    nodes.pop();
 }
