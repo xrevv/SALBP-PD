@@ -108,7 +108,7 @@ function mousePressed() {
     });
     if (!press && mouseX > menuSize) {
         console.log('New node')
-        nodes.push(new node(index++, 3, false, false));
+        nodes.push(new node(index++, 0, false, false));
     }
 }
 
