@@ -7,6 +7,7 @@ let index = 1;
 
 let buttonReload;
 let buttonReset;
+let buttonValidate;
 let buttonExport;
 let buttonSimulate;
 let buttonOrganise;
@@ -36,8 +37,12 @@ function setup() {
     buttonReset.position(10, 40);
     buttonReset.mousePressed(BttnReset);
 
+    buttonValidate = createButton('Validate');
+    buttonValidate.position(75, 40);
+    buttonValidate.mousePressed(BttnValidate);
+
     buttonExport = createButton('Export');
-    buttonExport.position(110, 40);
+    buttonExport.position(145, 40);
     buttonExport.mousePressed(BttnExport);
 
     buttonOrganise = createButton('Organise');
@@ -198,8 +203,34 @@ function BttnReset() {
     location.reload();
 }
 
+// TODO better cycleCheck
+function BttnValidate() {
+    if (nodes.length == 0) { alert("Brak elementów"); return true; }
+
+    let predsCheck = false;
+    let cycleCheck = false;
+    let cycleCheck2 = false;
+
+    nodes.forEach(node => {
+        if (node.time <= 0) { alert("Zły czas w " + node.num); return true; }
+        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return true; }
+
+        for (let i = node.num - 1; i < nodes.length; i++) {
+            nodes[i].connections.forEach(element => {
+                if (node.num == element) cycleCheck = true;
+            });
+        }
+        if (!cycleCheck && !cycleCheck2) cycleCheck2 = true;
+
+        if (node.sp) predsCheck = true;
+    });
+    if (!cycleCheck2) { alert("Graf jest cykliczny"); return true; }
+    if (!predsCheck) { alert("Brak ostatniego zadania"); return true; }
+
+    return false;
+}
+
 function BttnExport() {
-    if (validation()) return;
     let output = [];
     nodes.forEach(node => {
         let con = '';
@@ -256,33 +287,4 @@ function BttnPop() {
     index--;
     console.log('Delete node ' + index)
     nodes.pop();
-}
-
-// Validation
-// TODO better cycleCheck
-
-function validation() {
-    if (nodes.length == 0) { alert("Brak elementów"); return true; }
-
-    let predsCheck = false;
-    let cycleCheck = false;
-    let cycleCheck2 = false;
-
-    nodes.forEach(node => {
-        if (node.time <= 0) { alert("Zły czas w " + node.num); return true; }
-        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return true; }
-
-        for (let i = node.num - 1; i < nodes.length; i++) {
-            nodes[i].connections.forEach(element => {
-                if (node.num == element) cycleCheck = true;
-            });
-        }
-        if (!cycleCheck && !cycleCheck2) cycleCheck2 = true;
-
-        if (node.sp) predsCheck = true;
-    });
-    if (!cycleCheck2) { alert("Graf jest cykliczny"); return true; }
-    if (!predsCheck) { alert("Brak ostatniego zadania"); return true; }
-
-    return false;
 }
