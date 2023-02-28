@@ -248,6 +248,8 @@ function BttnSimulation() {
 }
 
 function BttnPop() {
+    if (!nodes.length) return;
+
     nodes[nodes.length - 1].inpTime.hide();
     nodes[nodes.length - 1].checkboxSP.hide();
     nodes[nodes.length - 1].inpConnections.hide();
