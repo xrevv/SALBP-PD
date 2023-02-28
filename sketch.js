@@ -107,7 +107,7 @@ function mousePressed() {
             press = true;
     });
     if (!press && mouseX > menuSize) {
-        console.log('New node')
+        console.log('New node ' + index)
         nodes.push(new node(index++, 0, false, false));
     }
 }
@@ -200,7 +200,6 @@ function BttnReset() {
 
 function BttnExport() {
     if (validation()) return;
-    alert("PASS");
     let output = [];
     nodes.forEach(node => {
         let con = '';
@@ -216,7 +215,7 @@ function BttnExport() {
         output.push('Op ' + node.num + ' ' + node.time + ' ' + (node.sp == true ? '"preds"' : '"succs"') + ' [' + con + '],');
     });
     output[output.length - 1] = output[output.length - 1].slice(0, -1).trim();
-    // saveStrings(output, 'output.txt');
+    saveStrings(output, 'output.txt');
 }
 
 function BttnOrganise() {
@@ -253,6 +252,7 @@ function BttnPop() {
     nodes[nodes.length - 1].checkboxSP.hide();
     nodes[nodes.length - 1].inpConnections.hide();
     index--;
+    console.log('Delete node ' + index)
     nodes.pop();
 }
 
@@ -272,12 +272,10 @@ function validation() {
 
         for (let i = node.num - 1; i < nodes.length; i++) {
             nodes[i].connections.forEach(element => {
-                console.log(node.num + " | " + element);
-                if (node.num == element) { console.log("here"); cycleCheck = true; }
+                if (node.num == element) cycleCheck = true;
             });
         }
-        if (!cycleCheck)
-            if (!cycleCheck2) { console.log("here2"); cycleCheck2 = true; }
+        if (!cycleCheck && !cycleCheck2) cycleCheck2 = true;
 
         if (node.sp) predsCheck = true;
     });
