@@ -199,6 +199,8 @@ function BttnReset() {
 }
 
 function BttnExport() {
+    if (validation()) return;
+    alert("PASS");
     let output = [];
     nodes.forEach(node => {
         let con = '';
@@ -214,7 +216,7 @@ function BttnExport() {
         output.push('Op ' + node.num + ' ' + node.time + ' ' + (node.sp == true ? '"preds"' : '"succs"') + ' [' + con + '],');
     });
     output[output.length - 1] = output[output.length - 1].slice(0, -1).trim();
-    saveStrings(output, 'output.txt');
+    // saveStrings(output, 'output.txt');
 }
 
 function BttnOrganise() {
@@ -252,4 +254,35 @@ function BttnPop() {
     nodes[nodes.length - 1].inpConnections.hide();
     index--;
     nodes.pop();
+}
+
+// Validation
+// TODO better cycleCheck
+
+function validation() {
+    if (nodes.length == 0) { alert("Brak elementów"); return true; }
+
+    let predsCheck = false;
+    let cycleCheck = false;
+    let cycleCheck2 = false;
+
+    nodes.forEach(node => {
+        if (node.time <= 0) { alert("Zły czas w " + node.num); return true; }
+        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return true; }
+
+        for (let i = node.num - 1; i < nodes.length; i++) {
+            nodes[i].connections.forEach(element => {
+                console.log(node.num + " | " + element);
+                if (node.num == element) { console.log("here"); cycleCheck = true; }
+            });
+        }
+        if (!cycleCheck)
+            if (!cycleCheck2) { console.log("here2"); cycleCheck2 = true; }
+
+        if (node.sp) predsCheck = true;
+    });
+    if (!cycleCheck2) { alert("Graf jest cykliczny"); return true; }
+    if (!predsCheck) { alert("Brak ostatniego zadania"); return true; }
+
+    return false;
 }
