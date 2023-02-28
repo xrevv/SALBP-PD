@@ -17,7 +17,9 @@ function setup() {
 
     frameRate(1000);
 
-    createCanvas(windowWidth, windowHeight);
+    canvas = createCanvas(windowWidth, windowHeight);
+    canvas.drop(HandleFile);
+
     textSize(window.innerWidth / 50);
     textAlign(CENTER, CENTER);
     textStyle(BOLD);
@@ -26,7 +28,7 @@ function setup() {
 
     rectMode(CORNER);
 
-    input = createFileInput(BttnHandleFile);
+    input = createFileInput(HandleFile);
     input.position(10, 10);
 
     buttonReload = createButton('Reload');
@@ -169,6 +171,21 @@ function maker() {
     index++;
 }
 
+function HandleFile(file) {
+    nodes.forEach(node => {
+        node.inpTime.hide();
+        node.checkboxSP.hide();
+        node.inpConnections.hide();
+    });
+
+    nodes.splice(0, nodes.length);
+    data = file.data.split('\n');
+    console.log(data);
+    clear();
+    maker();
+    display();
+}
+
 // Buttons
 
 function BttnReload() {
@@ -179,21 +196,6 @@ function BttnReload() {
     });
     nodes.splice(0, nodes.length);
 
-    clear();
-    maker();
-    display();
-}
-
-function BttnHandleFile(file) {
-    nodes.forEach(node => {
-        node.inpTime.hide();
-        node.checkboxSP.hide();
-        node.inpConnections.hide();
-    });
-
-    nodes.splice(0, nodes.length);
-    data = file.data.split('\n');
-    console.log(data);
     clear();
     maker();
     display();
