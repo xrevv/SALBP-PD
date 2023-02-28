@@ -207,15 +207,15 @@ function BttnReset() {
 
 // TODO better cycleCheck
 function BttnValidate() {
-    if (nodes.length == 0) { alert("Brak elementów"); return true; }
+    if (nodes.length == 0) { alert("Brak elementów"); return; }
 
     let predsCheck = false;
     let cycleCheck = false;
     let cycleCheck2 = false;
 
     nodes.forEach(node => {
-        if (node.time <= 0) { alert("Zły czas w " + node.num); return true; }
-        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return true; }
+        if (node.time <= 0) { alert("Zły czas w " + node.num); return; }
+        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return; }
 
         for (let i = node.num - 1; i < nodes.length; i++) {
             nodes[i].connections.forEach(element => {
@@ -226,10 +226,10 @@ function BttnValidate() {
 
         if (node.sp) predsCheck = true;
     });
-    if (!cycleCheck2) { alert("Graf jest cykliczny"); return true; }
-    if (!predsCheck) { alert("Brak ostatniego zadania"); return true; }
+    if (!cycleCheck2) { alert("Graf jest cykliczny"); return; }
+    if (!predsCheck) { alert("Brak ostatniego zadania"); return; }
 
-    return false;
+    alert("Wszystko OK");
 }
 
 function BttnExport() {
