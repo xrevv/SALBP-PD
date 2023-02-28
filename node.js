@@ -57,7 +57,7 @@ class node {
         text(this.text, this.pos.x, this.pos.y);
     }
 
-    connection() {
+    connect() {
         if (this.sp) return;
 
         this.connections.forEach(element => {

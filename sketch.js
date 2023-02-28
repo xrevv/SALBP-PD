@@ -97,7 +97,7 @@ function draw() {
 function display() {
     nodes.forEach(node => {
         node.update();
-        node.connection();
+        node.connect();
     });
     nodes.forEach(node => {
         node.body();
