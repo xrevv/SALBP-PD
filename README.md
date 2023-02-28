@@ -9,7 +9,7 @@
 Projekt realizowany w ramach miniprojektu z przedmiotu Zautomatyzowane Systemy Wytwarzania na studiach inżynierskich.
 
 <!-- ONLINE VERSION -->
-#[Wersja online][online-url]
+# [Wersja online][online-url]
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [stability-wip]:https://img.shields.io/badge/stability-wip-lightgrey.svg
