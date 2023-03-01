@@ -210,29 +210,35 @@ function BttnValidate() {
     if (nodes.length == 0) { alert('Brak elementów'); return; }
 
     let predsCheck = false;
+    let predsCheck2 = false;
     let cycleCheck = false;
 
     nodes.forEach(node => {
         if (node.time <= 0) { alert('Zły czas w ' + node.num); return; }
         if (node.connections <= 0) { alert('Brak połączenia w ' + node.num); return; }
 
+        if (node.sp) {
+            predsCheck = true;
+
+            // TODO predsCheck2
+            // node.connections.forEach(element => {
+            //     if (node.num == element.num) predsCheck2 = false;
+            // });
+        }
+
         try {
             nodes.forEach(node => {
                 if (cycleChecker(node.num - 1, node.num - 1)) cycleCheck = true;
             });
         } catch (error) {
-            if (error instanceof RangeError) {
-                cycleCheck = true;
-            }
-            else
-                cycleCheck = false;
+            if (error instanceof RangeError) cycleCheck = true;
+            else cycleCheck = false;
         }
-
-        if (node.sp) predsCheck = true;
     });
     if (cycleCheck) { alert('Graf jest cykliczny'); return; }
     if (!predsCheck) { alert('Brak ostatniego zadania'); return; }
 
+    // TODO - fix returns
     alert('Wszystko OK');
 }
 
