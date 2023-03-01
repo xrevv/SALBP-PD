@@ -5,7 +5,7 @@ class node {
         this.time = time;
         this.sp = sp;
 
-        this.r = window.innerWidth / 15;
+        this.r = window.innerWidth / 20;
 
         this.text = this.num.toString().concat("(", this.time.toString(), ")");
 
@@ -33,7 +33,7 @@ class node {
 
     update() {
         this.text = this.num.toString().concat("(", this.time, ")");
-        this.r = window.innerWidth / 15;
+        this.r = window.innerWidth / 20;
 
         let d = dist(mouseX, mouseY, this.pos.x, this.pos.y);
         if (d <= this.r / 2) {
