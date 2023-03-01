@@ -207,14 +207,14 @@ function BttnReset() {
 
 function BttnValidate() {
 
-    if (nodes.length == 0) { alert("Brak elementów"); return; }
+    if (nodes.length == 0) { alert('Brak elementów'); return; }
 
     let predsCheck = false;
     let cycleCheck = false;
 
     nodes.forEach(node => {
-        if (node.time <= 0) { alert("Zły czas w " + node.num); return; }
-        if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return; }
+        if (node.time <= 0) { alert('Zły czas w ' + node.num); return; }
+        if (node.connections <= 0) { alert('Brak połączenia w ' + node.num); return; }
 
         try {
             nodes.forEach(node => {
@@ -230,10 +230,10 @@ function BttnValidate() {
 
         if (node.sp) predsCheck = true;
     });
-    if (cycleCheck) { alert("Graf jest cykliczny"); return; }
-    if (!predsCheck) { alert("Brak ostatniego zadania"); return; }
+    if (cycleCheck) { alert('Graf jest cykliczny'); return; }
+    if (!predsCheck) { alert('Brak ostatniego zadania'); return; }
 
-    alert("Wszystko OK");
+    alert('Wszystko OK');
 }
 
 function cycleChecker(pos, pos2) {
