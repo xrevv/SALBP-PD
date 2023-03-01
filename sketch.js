@@ -205,31 +205,43 @@ function BttnReset() {
     location.reload();
 }
 
-// TODO better cycleCheck
 function BttnValidate() {
+
     if (nodes.length == 0) { alert("Brak elementów"); return; }
 
     let predsCheck = false;
     let cycleCheck = false;
-    let cycleCheck2 = false;
 
     nodes.forEach(node => {
         if (node.time <= 0) { alert("Zły czas w " + node.num); return; }
         if (node.connections <= 0) { alert("Brak połączenia w " + node.num); return; }
 
-        for (let i = node.num - 1; i < nodes.length; i++) {
-            nodes[i].connections.forEach(element => {
-                if (node.num == element) cycleCheck = true;
+        try {
+            nodes.forEach(node => {
+                if (cycleChecker(node.num - 1, node.num - 1)) cycleCheck = true;
             });
+        } catch (error) {
+            if (error instanceof RangeError) {
+                cycleCheck = true;
+            }
+            else
+                cycleCheck = false;
         }
-        if (!cycleCheck && !cycleCheck2) cycleCheck2 = true;
 
         if (node.sp) predsCheck = true;
     });
-    if (!cycleCheck2) { alert("Graf jest cykliczny"); return; }
+    if (cycleCheck) { alert("Graf jest cykliczny"); return; }
     if (!predsCheck) { alert("Brak ostatniego zadania"); return; }
 
     alert("Wszystko OK");
+}
+
+function cycleChecker(pos, pos2) {
+    if (!nodes[pos2].sp)
+        nodes[pos].connections.forEach(element => {
+            if (nodes[pos].num == element.num) return true;
+            else cycleChecker(pos2, element - 1);
+        });
 }
 
 function BttnExport() {
