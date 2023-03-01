@@ -48,7 +48,6 @@ function setup() {
     inpData = select('#textfield')
     inpData.position(width - menuSize + 10, 50);
     inpData.size(menuSize - 20);
-    inpData.height = height;
 
     buttonRefresh = createButton('Refresh');
     buttonRefresh.position(width - menuSize + menuSize / 2 - 20, 10);
