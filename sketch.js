@@ -3,9 +3,13 @@ const menuSize = 300;
 var data = [];
 var nodes = [];
 var press = false;
+
 let index = 1;
+let output = [];
 
 let buttonReload;
+let buttonLoad;
+let buttonRefresh;
 let buttonReset;
 let buttonValidate;
 let buttonExport;
@@ -13,12 +17,14 @@ let buttonSimulate;
 let buttonOrganise;
 let buttonPop;
 
+let inpData;
+
 function setup() {
 
     frameRate(1000);
 
     canvas = createCanvas(windowWidth, windowHeight);
-    canvas.drop(HandleFile);
+    canvas.drop(HandleData);
 
     textSize(window.innerWidth / 50);
     textAlign(CENTER, CENTER);
@@ -28,12 +34,25 @@ function setup() {
 
     rectMode(CORNER);
 
-    input = createFileInput(HandleFile);
+    input = createFileInput(HandleData);
     input.position(10, 10);
 
     buttonReload = createButton('Reload');
     buttonReload.position(220, 10);
     buttonReload.mousePressed(BttnReload);
+
+    buttonLoad = createButton('Load');
+    buttonLoad.position(width - menuSize + 10, 10);
+    buttonLoad.mousePressed(BttnLoad);
+
+    inpData = select('#textfield')
+    inpData.position(width - menuSize + 10, 50);
+    inpData.size(menuSize - 20);
+    inpData.height = height;
+
+    buttonRefresh = createButton('Refresh');
+    buttonRefresh.position(width - menuSize + menuSize / 2 - 20, 10);
+    buttonRefresh.mousePressed(BttnRefresh);
 
     buttonReset = createButton('Reset');
     buttonReset.position(10, 40);
@@ -65,6 +84,7 @@ function draw() {
 
     fill(50);
     rect(0, 0, menuSize, height)
+    rect(width - menuSize, 0, menuSize, height)
 
     nodes.forEach(node => {
         fill(0);
@@ -113,7 +133,7 @@ function mousePressed() {
         if (node.pressed(mouseX, mouseY))
             press = true;
     });
-    if (!press && mouseX > menuSize) {
+    if (!press && mouseX > menuSize && mouseX < width - menuSize) {
         console.log('New node ' + index)
         nodes.push(new node(index++, 0, false, false));
     }
@@ -171,7 +191,7 @@ function maker() {
     index++;
 }
 
-function HandleFile(file) {
+function HandleData(input) {
     nodes.forEach(node => {
         node.inpTime.hide();
         node.checkboxSP.hide();
@@ -179,11 +199,39 @@ function HandleFile(file) {
     });
 
     nodes.splice(0, nodes.length);
-    data = file.data.split('\n');
+
+    index = -1;
+
+    if (input.data)
+        data = input.data.split('\n');
+    else
+        data = input.split('\n');
+
     console.log(data);
+
     clear();
     maker();
     display();
+}
+
+function updateOutput() {
+    if (!nodes.length) return;
+
+    output = [];
+    nodes.forEach(node => {
+        let con = '';
+        if (node.connections.length > 1)
+            for (let index = 0; index < node.connections.length; index++) {
+                if (index == node.connections.length - 1)
+                    con += node.connections[index];
+                else
+                    con += (node.connections[index] + ', ');
+            }
+        else
+            con += node.connections[0];
+        output.push('Op ' + node.num + ' ' + node.time + ' ' + (node.sp == true ? '"preds"' : '"succs"') + ' [' + con + '],');
+    });
+    output[output.length - 1] = output[output.length - 1].slice(0, -1).trim();
 }
 
 // Buttons
@@ -199,6 +247,19 @@ function BttnReload() {
     clear();
     maker();
     display();
+}
+
+function BttnLoad() {
+    console.log(inpData.value().split('\n'));
+    HandleData(inpData.value());
+    clear();
+    maker();
+    display();
+}
+
+function BttnRefresh() {
+    updateOutput();
+    inpData.value(output.join('\n'));
 }
 
 function BttnReset() {
@@ -253,21 +314,7 @@ function cycleChecker(pos, pos2) {
 }
 
 function BttnExport() {
-    let output = [];
-    nodes.forEach(node => {
-        let con = '';
-        if (node.connections.length > 1)
-            for (let index = 0; index < node.connections.length; index++) {
-                if (index == node.connections.length - 1)
-                    con += node.connections[index];
-                else
-                    con += (node.connections[index] + ', ');
-            }
-        else
-            con += node.connections[0];
-        output.push('Op ' + node.num + ' ' + node.time + ' ' + (node.sp == true ? '"preds"' : '"succs"') + ' [' + con + '],');
-    });
-    output[output.length - 1] = output[output.length - 1].slice(0, -1).trim();
+    updateOutput();
     saveStrings(output, 'output.txt');
 }
 
