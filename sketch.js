@@ -207,23 +207,26 @@ function BttnReset() {
 
 function BttnValidate() {
 
-    if (nodes.length == 0) { alert('Brak elementów'); return; }
+    if (nodes.length == 0) { alert('Brak elementów'); throw "exit"; }
 
     let predsCheck = false;
-    let predsCheck2 = false;
+    let predsCheck2 = 0;
     let cycleCheck = false;
 
     nodes.forEach(node => {
-        if (node.time <= 0) { alert('Zły czas w ' + node.num); return; }
-        if (node.connections <= 0) { alert('Brak połączenia w ' + node.num); return; }
+        if (node.time <= 0) { alert('Zły czas w ' + node.num); throw "exit"; }
+        if (node.connections <= 0) { alert('Brak połączenia w ' + node.num); throw "exit"; }
 
         if (node.sp) {
             predsCheck = true;
 
-            // TODO predsCheck2
-            // node.connections.forEach(element => {
-            //     if (node.num == element.num) predsCheck2 = false;
-            // });
+            node.connections.forEach(element => {
+                nodes[element - 1].connections.forEach(element2 => {
+                    if (node.num == element2) predsCheck2++;
+                });
+            });
+            if (predsCheck2 != node.connections.length) { alert('Brak połączeń preds w ' + node.num); throw "exit"; }
+            predsCheck2 = 0;
         }
 
         try {
@@ -235,10 +238,9 @@ function BttnValidate() {
             else cycleCheck = false;
         }
     });
-    if (cycleCheck) { alert('Graf jest cykliczny'); return; }
-    if (!predsCheck) { alert('Brak ostatniego zadania'); return; }
+    if (cycleCheck) { alert('Graf jest cykliczny'); throw "exit"; }
+    if (!predsCheck) { alert('Brak ostatniego zadania'); throw "exit"; }
 
-    // TODO - fix returns
     alert('Wszystko OK');
 }
 
