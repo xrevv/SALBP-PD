@@ -81,7 +81,8 @@ function setup() {
 function draw() {
     clear();
 
-    fill(50);
+    fill(25);
+    noStroke();
     rect(0, 0, menuSize, height)
     rect(width - menuSize, 0, menuSize, height)
 
