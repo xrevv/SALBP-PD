@@ -8,14 +8,14 @@ let index = 1;
 let output = [];
 
 let buttonReload;
-let buttonLoad;
-let buttonRefresh;
-let buttonReset;
 let buttonValidate;
 let buttonExport;
-let buttonSimulate;
 let buttonOrganise;
 let buttonPop;
+let buttonSimulate;
+
+let buttonLoad;
+let buttonRefresh;
 
 let inpData;
 
@@ -26,6 +26,7 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
     canvas.drop(HandleData);
 
+    textFont('Open Sans');
     textSize(window.innerWidth / 50);
     textAlign(CENTER, CENTER);
     textStyle(BOLD);
@@ -37,45 +38,43 @@ function setup() {
     input = createFileInput(HandleData);
     input.position(10, 10);
 
-    buttonReload = createButton('Reload');
-    buttonReload.position(220, 10);
+    buttonReload = createButton('Wczytaj ponownie');
+    buttonReload.position(10, 40);
     buttonReload.mousePressed(BttnReload);
 
-    buttonLoad = createButton('Load');
+    buttonValidate = createButton('Sprawdź');
+    buttonValidate.position(10, 70);
+    buttonValidate.mousePressed(BttnValidate);
+
+    buttonExport = createButton('Eksportuj');
+    buttonExport.position(10, 100);
+    buttonExport.mousePressed(BttnExport);
+
+    buttonOrganise = createButton('Organizuj');
+    buttonOrganise.position(10, 130);
+    buttonOrganise.mousePressed(BttnOrganise);
+
+    buttonPop = createButton('Usuń ostatni element');
+    buttonPop.position(10, 160);
+    buttonPop.mousePressed(BttnPop);
+
+    buttonSimulate = createButton('AutoPlace (EXPERIMENTAL)');
+    buttonSimulate.position(10, 190);
+    buttonSimulate.mousePressed(BttnSimulation);
+
+
+    buttonLoad = createButton('Wczytaj');
     buttonLoad.position(width - menuSize + 10, 10);
     buttonLoad.mousePressed(BttnLoad);
 
-    inpData = select('#textfield')
-    inpData.position(width - menuSize + 10, 50);
-    inpData.size(menuSize - 20);
-
-    buttonRefresh = createButton('Refresh');
-    buttonRefresh.position(width - menuSize + menuSize / 2 - 20, 10);
+    buttonRefresh = createButton('Odśwież');
+    buttonRefresh.position(width - menuSize + 10, 40);
     buttonRefresh.mousePressed(BttnRefresh);
 
-    buttonReset = createButton('Reset');
-    buttonReset.position(10, 40);
-    buttonReset.mousePressed(BttnReset);
+    inpData = select('#textfield')
+    inpData.position(width - menuSize + 10, 70);
+    inpData.size(menuSize - 25);
 
-    buttonValidate = createButton('Validate');
-    buttonValidate.position(75, 40);
-    buttonValidate.mousePressed(BttnValidate);
-
-    buttonExport = createButton('Export');
-    buttonExport.position(145, 40);
-    buttonExport.mousePressed(BttnExport);
-
-    buttonOrganise = createButton('Organise');
-    buttonOrganise.position(210, 40);
-    buttonOrganise.mousePressed(BttnOrganise);
-
-    buttonSimulate = createButton('AutoPlace (EXPERIMENTAL)');
-    buttonSimulate.position(10, 70);
-    buttonSimulate.mousePressed(BttnSimulation);
-
-    buttonPop = createButton('Pop');
-    buttonPop.position(240, 70);
-    buttonPop.mousePressed(BttnPop);
 }
 
 function draw() {
@@ -86,26 +85,31 @@ function draw() {
     rect(0, 0, menuSize, height)
     rect(width - menuSize, 0, menuSize, height)
 
+    fill(100);
+    stroke(0, 0, 86)
+    strokeWeight(2);
+    rect(10, 11, menuSize - 20, 24, 6);
+
     nodes.forEach(node => {
-        fill(0);
-        stroke(0, 0, 100);
+        fill(100);
+        stroke(0, 0, 0);
         strokeWeight(2);
         textSize(14)
         textAlign(LEFT, CENTER);
         textStyle(BOLD);
 
-        text('Index     Time     Preds     Connections', 10, 110);
+        text('Index     Time      Preds      Connections', 20, 250);
 
-        text(node.num, 20, 100 + node.num * 25 + 10);
+        text(node.num, 30, 250 + node.num * 25 + 10);
 
-        node.inpTime.position(65, 100 + node.num * 25);
+        node.inpTime.position(75, 250 + node.num * 25);
         node.inpTime.size(30);
         node.inpTime.input(ChangeTime);
 
         node.checkboxSP.changed(ChangeSP);
-        node.checkboxSP.position(125, 100 + node.num * 25);
+        node.checkboxSP.position(135, 250 + node.num * 25);
 
-        node.inpConnections.position(175, 100 + node.num * 25);
+        node.inpConnections.position(185, 250 + node.num * 25);
         node.inpConnections.size(80);
         node.inpConnections.input(ChangeConnections);
 
@@ -148,6 +152,10 @@ function mouseReleased() {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+
+    buttonLoad.position(width - menuSize + 10, 10);
+    buttonRefresh.position(width - menuSize + 10, 40);
+    inpData.position(width - menuSize + 10, 70);
 }
 
 // Changers
@@ -198,7 +206,7 @@ function HandleData(input) {
         node.inpConnections.hide();
     });
 
-    nodes.splice(0, nodes.length);
+    nodes = [];
 
     index = -1;
 
@@ -243,27 +251,11 @@ function BttnReload() {
         node.inpConnections.hide();
     });
     nodes.splice(0, nodes.length);
+    index = 0;
 
     clear();
     maker();
     display();
-}
-
-function BttnLoad() {
-    console.log(inpData.value().split('\n'));
-    HandleData(inpData.value());
-    clear();
-    maker();
-    display();
-}
-
-function BttnRefresh() {
-    updateOutput();
-    inpData.value(output.join('\n'));
-}
-
-function BttnReset() {
-    location.reload();
 }
 
 function BttnValidate() {
@@ -324,6 +316,17 @@ function BttnOrganise() {
     });
 }
 
+function BttnPop() {
+    if (!nodes.length) return;
+
+    nodes[nodes.length - 1].inpTime.hide();
+    nodes[nodes.length - 1].checkboxSP.hide();
+    nodes[nodes.length - 1].inpConnections.hide();
+    index--;
+    console.log('Delete node ' + index)
+    nodes.pop();
+}
+
 function BttnSimulation() {
     // for (let index = 0; index < 10; index++) {
     //     nodes.forEach(node => {
@@ -347,13 +350,13 @@ function BttnSimulation() {
     // }
 }
 
-function BttnPop() {
-    if (!nodes.length) return;
+function BttnLoad() {
+    console.log(inpData.value().split('\n'));
+    HandleData(inpData.value());
+}
 
-    nodes[nodes.length - 1].inpTime.hide();
-    nodes[nodes.length - 1].checkboxSP.hide();
-    nodes[nodes.length - 1].inpConnections.hide();
-    index--;
-    console.log('Delete node ' + index)
-    nodes.pop();
+function BttnRefresh() {
+    updateOutput();
+    inpData.value('');
+    inpData.value(output.join('\n'));
 }
