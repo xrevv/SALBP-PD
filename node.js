@@ -86,6 +86,15 @@ class node {
             drawingContext.strokeStyle = grad2;
 
             line(this.pos.x, this.pos.y, that.pos.x, that.pos.y);
+
+            push()
+            let edge = this.r * 0.9;
+            let angle = atan2(this.pos.y - that.pos.y, this.pos.x - that.pos.x);
+            translate(that.pos.x, that.pos.y);
+            rotate(angle - HALF_PI);
+            triangle(-edge * 0.5, edge, edge * 0.5, edge, 0, -edge * 0.5);
+            pop()
+
         });
     }
 
