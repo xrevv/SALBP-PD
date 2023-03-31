@@ -92,7 +92,7 @@ class node {
             let angle = atan2(this.pos.y - that.pos.y, this.pos.x - that.pos.x);
             translate(that.pos.x, that.pos.y);
             rotate(angle - HALF_PI);
-            triangle(-edge * 0.5, edge, edge * 0.5, edge, 0, -edge * 0.5);
+            triangle(-edge * 0.3, edge * 1.5, edge * 0.3, edge * 1.5, 0, edge * 0.5);
             pop()
 
         });
